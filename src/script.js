@@ -6,6 +6,7 @@ const order_confirmed = document.querySelector(".order-confirmed");
 const order_stats = document.querySelector(".order-stats");
 const btn_new = document.getElementById("btn_new");
 const btn_confirmed = document.getElementById("btn_confirmed");
+const your_cart = document.getElementById("your-cart");
 
 let dessertArray = [];
 let selectedDesserts = [];
@@ -31,6 +32,11 @@ function selectDessert(dessertIndex, div) {
 function deleteSelectedDessert(idItem) {
   const itemIndex = findItemOnSelectedItems(idItem);
   selectedDesserts.splice(itemIndex, 1);
+  const getQtD = document.querySelector(`#quantityDisplay${idItem}`);
+  const fodase = getQtD.closest(".btn-quantity");
+  fodase.remove();
+  createButtonAddToCart(Number(idItem) - 1);
+
   updateCartItems();
 }
 
@@ -61,19 +67,19 @@ function insertDessertOnArray(newDessert) {
 }
 
 function findItemOnSelectedItems(idItem) {
-  let controlForEach = 0;
-  selectedDesserts.forEach((desserts) => {
-    if (desserts.id == idItem) {
-      return;
+  let newIdItem = 0;
+  for (let i = 0; i < selectedDesserts.length; i++) {
+    if (selectedDesserts[i].id == idItem) {
+      break;
     } else {
-      controlForEach++;
+      newIdItem++;
     }
-  });
-
-  return controlForEach;
+  }
+  return newIdItem;
 }
 
 function plusItem(idItem) {
+  console.log(idItem);
   const itemIndex = findItemOnSelectedItems(idItem);
   selectedDesserts[itemIndex].quantity += 1;
   updateCartItems();
@@ -104,6 +110,7 @@ function updateCartItems() {
     );
   });
   updatePrice();
+  your_cart.textContent = `Your Cart (${selectedDesserts.length})`;
 }
 
 function updatePrice() {
